@@ -22,6 +22,7 @@ app.get("/", function(req, res) {
       // let geo = getGeoHash(48.85674155317247, 2.3544311709702015);
       // console.log(geo);
       console.log(response);
+      res.send(response);
     })
     .catch(function(error) {
       console.log(error);
