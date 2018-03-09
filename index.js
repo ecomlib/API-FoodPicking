@@ -28,7 +28,7 @@ app.get("/", function(req, res) {
       console.log(error);
     });
 
-  res.send("Hello World");
+  //res.send("Hello World");
 });
 
 // axios.get("/", function() {});
