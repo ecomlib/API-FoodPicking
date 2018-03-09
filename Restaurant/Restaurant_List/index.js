@@ -1,4 +1,4 @@
-const getGeoHash = require("../../getGeoHash/getGeoHash");
+const getGeoHash = require("../../Function/getGeoHash");
 
 const axios = require("axios");
 const mongoose = require("mongoose");
