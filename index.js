@@ -9,7 +9,7 @@ mongoose.connect(
   process.env.MONGODB_URI || "mongodb://localhost:27017/food-picking"
 );
 
-app.get("/restaurant-menu/", function(req, res) {
+app.get("/restaurant-menu/:id/:link", function(req, res) {
   let id = req.params.id;
   let link = req.params.link;
   if (id) {
