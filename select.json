@@ -1,0 +1,76 @@
+"restaurant" : {
+    "id": "Number",
+    "name": "String",
+    "name_with_branch": "String",
+    "description": "String",
+    "newly_added": "Boolean",
+
+    "price_category": "Number",
+    
+    "menu": {
+      "menu_tags": [
+        { "type": "String", "name": "String" },
+      ]
+    },
+    "opens_at": "String",
+    "closes_at": "String",
+    "street_address": "String",
+    "post_code": "String",
+    "neighborhood": "String",
+    "phone_numbers": { "primary": "String", "secondary": "String" },
+    "city": "String",
+    "open": "Boolean",
+    "image":
+"Boolean"},
+  "menu": {
+    "id": 17898,
+    "categories": [
+      {
+        "id": 177620,
+        "description": null,
+        "name": "Burgers",
+        "sort_order": 2,
+        "top_level": true,
+        "unique_id": 177679
+      },
+    ],
+    "modifier_groups": [
+      {
+        "id": 48424,
+        "name": "Bacon",
+        "instruction": "",
+        "min_selection_points": 0,
+        "max_selection_points": 1,
+        "allow_multiple_same_item": false,
+        "modifier_options": [
+          {
+            "id": 1611972,
+            "uid": 1611975,
+            "name": "Bacon",
+            "description": null,
+            "modifier_groups": [],
+            "price": 1.2
+          }
+        ]
+      },
+    ],
+    "items": [
+      {
+        "id": 1344364,
+        "uid": 1344367,
+        "name": "CC A frites",
+        "description":
+          "Viande de bœuf hachée sur place, roquette, tomates, oignons, cream cheese, ketchup, moutarde, accompagné de frites fraîches",
+        "price": "13,90 €",
+        "raw_price": 13.9,
+        "alt_mod_price": null,
+        "sort_order": 1,
+        "popular": false,
+        "alcohol": false,
+        "category_id": 177620,
+        "image": null,
+        "modifier_groups": [25002, 48424]
+      },
+    ]
+}
+
