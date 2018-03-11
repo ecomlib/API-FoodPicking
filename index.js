@@ -112,6 +112,8 @@ app.get("/restaurant-menu/:id", function(req, res) {
           return res.json(menu);
           // (!err && restaurant.infos.id !== id)
         }
+      } else {
+        return res.status.json("409: lot of problems");
       }
 
       //
