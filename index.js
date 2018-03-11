@@ -12,6 +12,7 @@ mongoose.connect(
 app.get("/restaurant-menu/:id/:link", function(req, res) {
   let id = req.params.id;
   let link = req.params.link;
+  console.log(link);
   if (id) {
     Restaurant.findOne({ id: id }).exec(function(err, menu) {
       // console.log("menu.infos : .... ", menu);
