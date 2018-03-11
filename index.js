@@ -9,9 +9,9 @@ mongoose.connect(
   process.env.MONGODB_URI || "mongodb://localhost:27017/food-picking"
 );
 
-app.get("/restaurant-menu/:id", function(req, res) {
+app.get("/restaurant-menu/:id/:link", function(req, res) {
   let id = req.params.id;
-  //let link = req.params.link;
+  let link = req.params.link;
   if (id) {
     Restaurant.findOne({ id: id }).exec(function(err, menu) {
       // console.log("menu.infos : .... ", menu);
@@ -19,8 +19,8 @@ app.get("/restaurant-menu/:id", function(req, res) {
       // console.log("menu.infos.id", menu.infos.id);
       if (!err) {
         if (menu === null) {
-          const link =
-            "https://deliveroo.fr/menu/paris/1er-louvre/nabab-rambuteau";
+          // const link =
+          //   "https://deliveroo.fr/menu/paris/1er-louvre/nabab-rambuteau";
           //   // "https://deliveroo.fr/menu/paris/3eme-temple/w-the-moon-charlot?day=today&time=ASAP";
           // // "https://deliveroo.fr/fr/menu/paris/11eme-republique/rosa-parks";
           // // "https://deliveroo.fr/fr/menu/paris/11eme-republique/pierre-sang";
