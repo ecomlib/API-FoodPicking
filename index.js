@@ -9,20 +9,23 @@ mongoose.connect(
   process.env.MONGODB_URI || "mongodb://localhost:27017/food-picking"
 );
 
-app.get("/restaurant-menu/:id", function(req, res) {
+app.get("/restaurant-menu/", function(req, res) {
   let id = req.params.id;
+  let link = req.params.link;
   if (id) {
     Restaurant.findOne({ id: id }).exec(function(err, menu) {
       // console.log("menu.infos : .... ", menu);
       console.log("id", menu);
       // console.log("menu.infos.id", menu.infos.id);
       if (!err) {
-        if (menu === null || menu.id !== id) {
-          const link =
-            "https://deliveroo.fr/menu/paris/3eme-temple/w-the-moon-charlot?day=today&time=ASAP";
-          // "https://deliveroo.fr/fr/menu/paris/11eme-republique/rosa-parks";
-          // "https://deliveroo.fr/fr/menu/paris/11eme-republique/pierre-sang";
-          // "https://deliveroo.fr/fr/menu/paris/2eme-bourse/lemon-in-paris";
+        if (menu === null) {
+          // const link =
+          //   // "https://deliveroo.fr/menu/paris/3eme-temple/w-the-moon-charlot?day=today&time=ASAP";
+          // // "https://deliveroo.fr/fr/menu/paris/11eme-republique/rosa-parks";
+          // // "https://deliveroo.fr/fr/menu/paris/11eme-republique/pierre-sang";
+          // // "https://deliveroo.fr/fr/menu/paris/2eme-bourse/lemon-in-paris";
+          // "https://deliveroo.fr/menu/paris/8eme-saint-philippe-du-roule/sushi-parisien?day=today&time=ASAP";
+          // "https://deliveroo.fr/menu/paris/2eme-bourse/blend-argout?day=today&time=ASAP";
 
           scrap(
             link,
@@ -118,4 +121,6 @@ app.get("/restaurant-menu/:id", function(req, res) {
   }
 });
 
-app.listen(process.env.PORT || 3000);
+app.listen(process.env.PORT || 3000, () => {
+  console.log("server is up");
+});
