@@ -5,7 +5,9 @@ const mongoose = require("mongoose");
 const Restaurant = require("./modelRestaurant");
 let data = null;
 
-mongoose.connect("mongodb://localhost:27017/food-picking");
+mongoose.connect(
+  process.env.MONGODB_URI || "mongodb://localhost:27017/food-picking"
+);
 
 app.get("/restaurant-menu/:id", function(req, res) {
   let id = req.params.id;
@@ -116,4 +118,4 @@ app.get("/restaurant-menu/:id", function(req, res) {
   }
 });
 
-app.listen(3000);
+app.listen(process.env.PORT || 3000);
