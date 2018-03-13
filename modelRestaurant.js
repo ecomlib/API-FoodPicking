@@ -69,7 +69,8 @@ var RestaurantSchema = new mongoose.Schema({
         alcohol: Boolean,
         category_id: Number,
         image: String,
-        modifier_groups: [Number]
+        modifier_groups: [Number],
+        quantity: Number
       }
     ]
   },
