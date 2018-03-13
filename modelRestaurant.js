@@ -21,7 +21,7 @@ var RestaurantSchema = new mongoose.Schema({
     phone_numbers: { primary: String, secondary: String },
     city: String,
     open: Boolean,
-    image: String
+    image: { image_full: String, image_thumb: String }
   },
   menu: {
     id: Number,

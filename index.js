@@ -12,11 +12,9 @@ mongoose.connect(
 app.get("/restaurant-menu/", function(req, res) {
   let id = req.query.id;
   let link = req.query.link;
-  console.log(link);
+  // console.log(link);
   if (id) {
     Restaurant.findOne({ id: id }).exec(function(err, menu) {
-      console.log("id", menu);
-
       if (!err) {
         if (menu === null) {
           scrap(
@@ -45,14 +43,22 @@ app.get("/restaurant-menu/", function(req, res) {
                     secondary: data.restaurant.phone_numbers.secondary
                   },
                   city: data.restaurant.city,
-                  open: data.restaurant.open,
-                  image: data.restaurant.image
+                  open: data.restaurant.open
                 },
                 menu: {
                   id: data.menu.id
                 }
                 // createdAt: { type: Date, default: Date.now }
               };
+              restaurant.infos.image = {
+                image_full: data.restaurant.image
+                  .replace(320, 100)
+                  .replace(180, 200),
+                image_thumb: data.restaurant.image
+                  .replace(320, 120)
+                  .replace(180, 120)
+              };
+              console.log("id", restaurant.menu.image);
               var tab = [];
 
               for (let i = 0; i < data.menu.categories.length; i++) {
@@ -91,6 +97,7 @@ app.get("/restaurant-menu/", function(req, res) {
               );
               return res.json(restaurant);
             }
+
             // } else {
             //   res.status(400).json("err 403 : error");
             //   // 3) Créer des documents
