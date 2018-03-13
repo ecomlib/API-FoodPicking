@@ -15,20 +15,10 @@ app.get("/restaurant-menu/", function(req, res) {
   console.log(link);
   if (id) {
     Restaurant.findOne({ id: id }).exec(function(err, menu) {
-      // console.log("menu.infos : .... ", menu);
       console.log("id", menu);
-      // console.log("menu.infos.id", menu.infos.id);
+
       if (!err) {
         if (menu === null) {
-          // const link =
-          //   "https://deliveroo.fr/menu/paris/1er-louvre/nabab-rambuteau";
-          //   // "https://deliveroo.fr/menu/paris/3eme-temple/w-the-moon-charlot?day=today&time=ASAP";
-          // // "https://deliveroo.fr/fr/menu/paris/11eme-republique/rosa-parks";
-          // // "https://deliveroo.fr/fr/menu/paris/11eme-republique/pierre-sang";
-          // // "https://deliveroo.fr/fr/menu/paris/2eme-bourse/lemon-in-paris";
-          // "https://deliveroo.fr/menu/paris/8eme-saint-philippe-du-roule/sushi-parisien?day=today&time=ASAP";
-          // "https://deliveroo.fr/menu/paris/2eme-bourse/blend-argout?day=today&time=ASAP";
-
           scrap(
             link,
             function(err, $) {
