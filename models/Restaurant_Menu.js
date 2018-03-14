@@ -10,7 +10,7 @@ var RestaurantSchema = new mongoose.Schema({
     name_with_branch: String,
     description: String,
     newly_added: Boolean,
-
+    menu: { menu_tags: [] },
     price_category: Number,
 
     opens_at: String,
@@ -77,6 +77,11 @@ var RestaurantSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 // 2) Definir le model - A faire qu'une fois
-var Restaurant = mongoose.model("Restaurant", RestaurantSchema);
+//var Restaurant = mongoose.model("Restaurant", RestaurantSchema);
 
-module.exports = mongoose.model("Restaurant", RestaurantSchema);
+// module.exports = mongoose.model("Restaurant", RestaurantSchema);
+module.exports = mongoose.model(
+  "Restaurant_menu",
+  RestaurantSchema,
+  "restaurant_menus"
+);
