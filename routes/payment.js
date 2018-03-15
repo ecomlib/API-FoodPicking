@@ -19,7 +19,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-router.post("/", (req, res) => {
+router.post("/order", (req, res) => {
   if (req.body.token) {
     console.log("tok", req.body.token);
     console.log("amount", req.body.total);
