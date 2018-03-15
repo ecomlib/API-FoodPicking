@@ -1,127 +1,93 @@
-const scrap = require("scrap");
+// Le package `dotenv` permet de pouvoir definir des variables d'environnement dans le fichier `.env`
+// Nous utilisons le fichier `.slugignore` afin d'ignorer le fichier `.env` dans l'environnement Heroku
+require("dotenv").config();
+
+// mongoose.connect(
+//   process.env.MONGODB_URI || "mongodb://localhost:27017/foodPicking"
+// );
+const mongoose = require("mongoose");
+mongoose.connect(process.env.MONGODB_URI, function(err) {
+  if (err) console.error("Could not connect to mongodb.");
+});
+
 const express = require("express");
 const app = express();
-const mongoose = require("mongoose");
-const Restaurant = require("./modelRestaurant");
-let data = null;
 
-mongoose.connect(
-  process.env.MONGODB_URI || "mongodb://localhost:27017/food-picking"
+// Le package `helmet` est une collection de protections contre certaines vulnérabilités HTTP
+var helmet = require("helmet");
+app.use(helmet());
+
+// Les réponses (> 1024 bytes) du serveur seront compressées au format GZIP pour diminuer la quantité d'informations transmise
+var compression = require("compression");
+app.use(compression());
+
+// Parse le `body` des requêtes HTTP reçues
+var bodyParser = require("body-parser");
+app.use(bodyParser.json());
+
+// Initialisation des models
+const User = require("./models/User");
+const Order = require("./models/Order");
+
+// Le package `passport`
+var passport = require("passport");
+app.use(passport.initialize()); // TODO test
+
+// Nous aurons besoin de 2 strategies :
+// - `local` permettra de gérer le login nécessitant un mot de passe
+var LocalStrategy = require("passport-local").Strategy;
+passport.use(
+  new LocalStrategy(
+    {
+      usernameField: "email",
+      passReqToCallback: true,
+      session: false
+    },
+    User.authenticateLocal()
+  )
 );
 
-app.get("/restaurant-menu/", function(req, res) {
-  let id = req.query.id;
-  let link = req.query.link;
-  // console.log(link);
-  if (id) {
-    Restaurant.findOne({ id: id }).exec(function(err, menu) {
-      if (!err) {
-        if (menu === null) {
-          scrap(
-            link,
-            function(err, $) {
-              data = JSON.parse(
-                $(".js-react-on-rails-component")
-                  .text()
-                  .trim()
-              );
-              var restaurant = {
-                id: data.restaurant.id,
-                infos: {
-                  name: data.restaurant.name,
-                  name_with_branch: data.restaurant.name_with_branch,
-                  description: data.restaurant.description,
-                  newly_added: data.restaurant.newly_added,
-                  price_category: data.restaurant.price_category,
-                  opens_at: data.restaurant.opens_at,
-                  closes_at: data.restaurant.closes_at,
-                  street_address: data.restaurant.street_address,
-                  post_code: data.restaurant.post_code,
-                  neighborhood: data.restaurant.neighborhood,
-                  phone_numbers: {
-                    primary: data.restaurant.phone_numbers.primary,
-                    secondary: data.restaurant.phone_numbers.secondary
-                  },
-                  city: data.restaurant.city,
-                  open: data.restaurant.open
-                },
-                menu: {
-                  id: data.menu.id
-                }
-                // createdAt: { type: Date, default: Date.now }
-              };
-              restaurant.infos.image = {
-                image_full: data.restaurant.image
-                  .replace(320, 100)
-                  .replace(180, 200),
-                image_thumb: data.restaurant.image
-                  .replace(320, 120)
-                  .replace(180, 120)
-              };
-              console.log("id", restaurant.menu.image);
-              var tab = [];
+// - `http-bearer` permettra de gérer toute les requêtes authentifiées à l'aide d'un `token`
+var HTTPBearerStrategy = require("passport-http-bearer").Strategy;
+passport.use(new HTTPBearerStrategy(User.authenticateBearer())); // La méthode `authenticateBearer` a été déclarée dans le model User
 
-              for (let i = 0; i < data.menu.categories.length; i++) {
-                tab.push({
-                  id: data.menu.categories[i].id,
-                  description: data.menu.categories[i].description,
-                  name: data.menu.categories[i].name,
-                  sort_order: data.menu.categories[i].sort_order,
-                  top_level: data.menu.categories[i].top_level,
-                  unique_id: data.menu.categories[i].unique_id
-                });
-              }
-              var menuItem = [];
-              data.menu.items.map(function(item) {
-                return menuItem.push(item);
-              });
-              restaurant.menu.items = menuItem;
-
-              restaurant.menu.categories = tab;
-              var newRestaurant = new Restaurant(restaurant);
-              //console.log("info . id : ", infos.id);
-              // 4) Sauvegarder des documents
-              newRestaurant.save(
-                function(err, obj) {
-                  if (err) {
-                    console.log("something went wrong");
-                  } else {
-                    console.log(
-                      "we just saved the new restaurant " + obj.infos.name
-                    );
-                  }
-                },
-                () => {
-                  // console.log("youssef", menu);
-                }
-              );
-              return res.json(restaurant);
-            }
-
-            // } else {
-            //   res.status(400).json("err 403 : error");
-            //   // 3) Créer des documents
-
-            //   console.log("data", restaurant.menu.items.length);
-            //   // }
-            // }
-          );
-        } else {
-          return res.json(menu);
-          // (!err && restaurant.infos.id !== id)
-        }
-      } else {
-        return res.status.json("409: lot of problems");
-      }
-
-      //
-    });
-    // } else
-  } else {
-    return res.status(400).json("err : id is missing");
-  }
+app.get("/", function(req, res) {
+  res.send("Welcome to the FoodPicking API.");
 });
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log("server is up");
+// `Cross-Origin Resource Sharing` est un mechanisme permettant d'autoriser les requêtes provenant d'un nom de domaine different
+// Ici, nous autorisons l'API à repondre aux requêtes AJAX venant d'autres serveurs
+var cors = require("cors");
+app.use("/api", cors());
+
+// Les routes sont séparées dans plusieurs fichiers
+var coreRoutes = require("./routes/core.js");
+var userRoutes = require("./routes/user.js");
+var restaurantRoutes = require("./routes/restaurant.js");
+// Les routes relatives aux utilisateurs auront pour prefix d'URL `/user`
+app.use("/api", coreRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/restaurant", restaurantRoutes);
+
+// Toutes les méthodes HTTP (GET, POST, etc.) des pages non trouvées afficheront une erreur 404
+app.all("*", function(req, res) {
+  res.status(404).json({ error: "Not Found" });
 });
+
+// Le dernier middleware de la chaîne gérera les d'erreurs
+// Ce `error handler` doit définir obligatoirement 4 paramètres
+// Définition d'un middleware : https://expressjs.com/en/guide/writing-middleware.html
+app.use(function(err, req, res, next) {
+  if (res.statusCode === 200) res.status(400);
+  console.error(err);
+
+  if (process.env.NODE_ENV === "production") err = "An error occurred";
+  res.json({ error: err });
+});
+
+app.listen(process.env.PORT, function() {
+  console.log(`FoodPicking API running on port ${process.env.PORT}`);
+});
+
+// TODO test
+// console.log(`process.env.NODE_ENV = ${process.env.NODE_ENV}`);
