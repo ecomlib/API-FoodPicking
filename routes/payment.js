@@ -33,6 +33,11 @@ router.post("/order", (req, res) => {
         metadata: { order_id: 6735 }
       },
       function(err, charge) {
+        if (!err) {
+          res.json(charge);
+        } else {
+          res.end();
+        }
         console.log(err, charge);
       }
     );
