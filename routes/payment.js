@@ -42,6 +42,7 @@ router.post("/order", (req, res) => {
           console.log(err);
         } else {
           var order = new Order({
+            hour: req.body.chosenHour,
             items: req.body.items,
             total: req.body.total,
             users: req.body.data
