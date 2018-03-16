@@ -1,6 +1,8 @@
 var express = require("express");
 var app = express();
 var router = express.Router();
+const Order = require("../models/Order");
+const User = require("../models/User");
 
 var bodyParser = require("body-parser");
 var stripe = require("stripe")("sk_test_dVwLWXfQTv5VdiBTqkftDkxZ");
@@ -20,13 +22,11 @@ app.use(function(req, res, next) {
 });
 
 router.post("/order", (req, res) => {
-  console.log("toki", req.body.token);
-  console.log("order", req.body.items);
-  console.log("total", req.body.total);
-  console.log("id", req.body.data);
   if (req.body.token) {
-    console.log("tok", req.body.token);
-    console.log("amount", req.body.total);
+    const token = req.body.token;
+    const total = req.body.total;
+    const id = req.body.data;
+    console.log("test", req.body.data);
     const { name } = req.body.token.card;
     stripe.charges.create(
       {
@@ -41,7 +41,58 @@ router.post("/order", (req, res) => {
           res.end();
           console.log(err);
         } else {
-          res.json(charge);
+          var order = new Order({
+            items: req.body.items,
+            total: req.body.total,
+            users: req.body.data
+          });
+          order.save(
+            function(err, obj) {
+              if (err) {
+                console.log("something went wrong");
+              } else {
+                console.log("we just saved the new order " + obj);
+              }
+            },
+            () => {
+              //console.log("affichage du restaurant_menu", restaurant);
+            }
+          );
+          User.findOne({ _id: req.body.data }).exec(function(err, user) {
+            if (req.body.data && !err) {
+              user.account.orders.push(order.id);
+
+              user.save(function(err, obj) {
+                if (err) {
+                  console.log("something went wrong");
+                } else {
+                  console.log("we just saved the new order " + obj);
+                }
+              });
+              return res.json({
+                charge,
+                total,
+                id: req.body.data,
+                items: req.body.items
+              });
+            } else {
+              res.json("err");
+            }
+            console.log(id);
+          });
+
+          console.log("The author is %s", order.users);
+
+          // prints "The author is Ian Fleming"
+
+          // Order.findOne({ id: req.body.data })
+          //   .populate("user")
+          //   .exec(function(err, story) {
+          //     if (err) return handleError(err);
+          //     console.log("The author is %s", order.user);
+          //     // prints "The author is Ian Fleming"
+          //   });
+
           console.log(err, charge);
         }
       }
