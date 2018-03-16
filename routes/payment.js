@@ -20,6 +20,10 @@ app.use(function(req, res, next) {
 });
 
 router.post("/order", (req, res) => {
+  console.log("toki", req.body.token);
+  console.log("order", req.body.items);
+  console.log("total", req.body.total);
+  console.log("id", req.body.data);
   if (req.body.token) {
     console.log("tok", req.body.token);
     console.log("amount", req.body.total);
@@ -33,7 +37,13 @@ router.post("/order", (req, res) => {
         metadata: { order_id: 6735 }
       },
       function(err, charge) {
-        console.log(err, charge);
+        if (err) {
+          res.end();
+          console.log(err);
+        } else {
+          res.json(charge);
+          console.log(err, charge);
+        }
       }
     );
   } else {
