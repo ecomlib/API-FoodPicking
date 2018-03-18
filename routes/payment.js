@@ -42,9 +42,10 @@ router.post("/order", (req, res) => {
           console.log(err);
         } else {
           var order = new Order({
+            restaurantName: req.body.restaurantName,
             hour: req.body.chosenHour,
             items: req.body.items,
-            total: req.body.total,
+            total,
             users: req.body.data
           });
           order.save(
@@ -74,7 +75,8 @@ router.post("/order", (req, res) => {
                 charge,
                 total,
                 id: req.body.data,
-                items: req.body.items
+                items: req.body.items,
+                restaurantName: req.body.restaurantName
               });
             } else {
               res.json("err");
