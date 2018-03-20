@@ -8,6 +8,7 @@ var OrderSchema = new mongoose.Schema({
   hour: String,
   total: Number,
   restaurantName: String,
+  orderId: String,
   users: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
