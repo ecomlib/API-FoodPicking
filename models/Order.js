@@ -9,6 +9,7 @@ var OrderSchema = new mongoose.Schema({
   total: Number,
   restaurantName: String,
   orderId: String,
+  created_at: { type: Date, required: true, default: Date.now },
   users: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
