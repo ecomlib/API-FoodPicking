@@ -65,13 +65,11 @@ var coreRoutes = require("./routes/core.js");
 var userRoutes = require("./routes/user.js");
 var restaurantRoutes = require("./routes/restaurant.js");
 var paymentRoutes = require("./routes/payment.js");
-var ordersRoutes = require("./routes/orders.js");
 // Les routes relatives aux utilisateurs auront pour prefix d'URL `/user`
 app.use("/api", coreRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/restaurant", restaurantRoutes);
 app.use("/api/payment", paymentRoutes);
-app.use("/api/orders", ordersRoutes);
 
 // Toutes les méthodes HTTP (GET, POST, etc.) des pages non trouvées afficheront une erreur 404
 app.all("*", function(req, res) {
