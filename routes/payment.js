@@ -77,7 +77,8 @@ router.post("/order", (req, res) => {
                 charge,
                 total,
                 id: req.body.data,
-                items: req.body.items
+                items: req.body.items,
+                orderId: uid(8)
               });
             } else {
               res.json("err");
