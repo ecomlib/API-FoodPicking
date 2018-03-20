@@ -3,6 +3,7 @@ var app = express();
 var router = express.Router();
 const Order = require("../models/Order");
 const User = require("../models/User");
+const uid = require("uid");
 
 var bodyParser = require("body-parser");
 var stripe = require("stripe")("sk_test_dVwLWXfQTv5VdiBTqkftDkxZ");
@@ -28,6 +29,7 @@ router.post("/order", (req, res) => {
     const id = req.body.data;
     console.log("test", req.body.data);
     const { name } = req.body.token.card;
+
     stripe.charges.create(
       {
         amount: req.body.total * 100,
@@ -44,8 +46,9 @@ router.post("/order", (req, res) => {
           var order = new Order({
             hour: req.body.chosenHour,
             items: req.body.items,
-            total: req.body.total,
-            users: req.body.data
+            total,
+            users: req.body.data,
+            orderId: uid(8)
           });
           order.save(
             function(err, obj) {
