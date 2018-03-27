@@ -48,7 +48,8 @@ router.post("/order", (req, res) => {
             items: req.body.items,
             total,
             users: req.body.data,
-            orderId: uid(8)
+            orderId: uid(8),
+            restaurantName: req.body.restaurantName
           });
           order.save(
             function(err, obj) {
