@@ -74,6 +74,14 @@ var RestaurantSchema = new mongoose.Schema({
       }
     ]
   },
+  // users: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: "User"
+  // },
+  users: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+  },
   createdAt: { type: Date, default: Date.now }
 });
 // 2) Definir le model - A faire qu'une fois
