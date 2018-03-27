@@ -5,10 +5,16 @@ var UserSchema = new mongoose.Schema({
   email: String,
   password: String,
   token: String, // Le token permettra d'authentifier l'utilisateur à l'aide du package `passport-http-bearer`
-
+  restaurant_menu: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Restaurant_Menu"
+    }
+  ],
   // Nous choisisons de créer un objet `account` dans lequel nous stockerons les informations non sensibles
   account: {
     username: String,
+
     orders: [
       {
         type: mongoose.Schema.Types.ObjectId,
