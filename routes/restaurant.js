@@ -46,7 +46,7 @@ router.get("/menu/", (req, res) => {
               }
               // createdAt: { type: Date, default: Date.now }
             };
-            restaurant_menu.users.push();
+            //restaurant_menu.users.push();
             restaurant_menu.infos.image = {
               image_full: data.restaurant.image
                 .replace(320, 100)

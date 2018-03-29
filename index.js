@@ -81,7 +81,7 @@ app.all("*", function(req, res) {
   res.status(404).json({ error: "Not Found" });
 });
 
-// Le dernier middleware de la chaîne gérera les d'erreurs
+// Le dernier middleware de la chaîne gérera les erreurs
 // Ce `error handler` doit définir obligatoirement 4 paramètres
 // Définition d'un middleware : https://expressjs.com/en/guide/writing-middleware.html
 app.use(function(err, req, res, next) {
